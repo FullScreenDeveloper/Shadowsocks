@@ -1,31 +1,38 @@
 # Shadowsocks
 How to build your own Shadowsocks
 
-// TOD 未完成
-
-## 什么是VPS
+# 如何搭建自己的Shadowsocks
+主要有以下步骤：
+> 1. 购买境外VPS
+> 2. VPS中安装Shadowsocks
+> 3. VPS中启动Shadowsocks服务
+> 4. 使用客户端Shadowsocks
+# 什么是VPS
 [百度百科-VPS](https://baike.baidu.com/item/VPS)
-## 购买bandwagonhost的VPS
-搬瓦工，因其官网网站标识是BandwagonHost，有点类似BanWaGong的拼写，所以我们国内的站长喜欢称作为搬瓦工VPS。以下是两个重要的网站:
-- [搬瓦工官网](https://bwh1.net/)
-- [搬瓦工中文网-非官方](http://banwagong.cn/)
+# 购买bandwagonhost的VPS
+搬瓦工，因其官网网站标识是BandwagonHost，有点类似BanWaGong的拼写，所以我们国内的站长喜欢称作为搬瓦工VPS。
 
 如何选购VPS配置？
+
 当前选择购买VPS的主要目的是搭建Shadowsocks，所以选择最低配置(*最便宜)*的就够用了，最重要的是能够直接使用支付宝付款啊，也就是下面这款：
 
-![版完工套餐](http://obh9jd33g.bkt.clouddn.com/writestory/1534082013378.jpg)
+![19.9美元套餐](http://obh9jd33g.bkt.clouddn.com/writestory/1537965460533.png)
 
 一年19.99美刀，将近130人民币，算上来是十分的划算了，加上优惠码的话还能打将近6%的折扣。
 
-[19.99购买地址](https://bwh1.net/cart.php?a=confproduct&i=0)
+[19.99购买地址](https://bandwagonhost.com/aff.php?aff=37047)
+[19.99购买地址](https://bandwagonhost.com/aff.php?aff=37047)
+[19.99购买地址](https://bandwagonhost.com/aff.php?aff=37047)
 
 加入购物车：
 
 ![购买页面](http://obh9jd33g.bkt.clouddn.com/writestory/1534082147767.jpg)
 
 输入优惠码
+[优惠码领取](https://www.bandwagonhost.net/coupon)
 
 ![输入优惠码](http://obh9jd33g.bkt.clouddn.com/writestory/1534082287860.jpg)
+
 
 折扣了1.25美刀
 
@@ -66,6 +73,87 @@ How to build your own Shadowsocks
 
 ![一键安装Shadowsocks](http://obh9jd33g.bkt.clouddn.com/writestory/1534083280313.jpg)
 
-准备相关工具
-mac
-windows 
+## 登录VPS
+本次演示使用的是windows系统，登录工具为：PuTTY，登录用户为root，
+使用root用户登录，进入到Linux控制台，首先对可用软件源进行升级
+> yum update
+
+这里我们使用Python版的Shadowsocks，方便日后的管理。先安装Python环境以及pip
+> yum install python-setuptools && easy_install pip
+
+PS:要升级的话不要做以上操作成功后，安装Shadowsocks
+> pip install shadowsocks
+
+至此，Shadowsocks安装完毕。
+
+## 配置Shadowsocks
+
+在当前root用户的个人文件夹下新建一个Shadowsocks的配置文件
+> vi /root/shadowsocks.json
+
+这里以创建多个账号为例
+```json
+{
+	"server": "你的IP地址",
+	"port_password": {
+		"8381": "自定义一个该端口的密码",
+		"8382": "自定义一个该端口的密码"
+	},
+	"timeout": 300,
+	"method": "rc4-md5",
+	"fast_open": false,
+	"workers": 1
+}
+```
+|参数名|    说明|
+|---------|-----------|
+|server   |当前服务器IP|
+|port_password   |要建立的端口号和密码（可以定义多个端口和密码供多设备使用）|
+|timeout   |超时时间（秒）|
+|method  |加密方法（推荐使用rc4-md5）|
+fast_open  |如果VPS的Linux内核在3.7以上，可以设置为true开启，以降低延迟|
+|workers    |works数量，默认为1|
+
+编辑好后保存并退出。
+> 按下 esc
+> 输入  *:wq*
+> 回车
+
+启动
+> ssserver -c /root/shadowsocks.json
+
+这里启动是直接在当前命令行中启动的，一旦关闭窗口就会关闭服务(Web端除外)，需要加上**nohup**
+
+> nohup ssserver -c /root/shadowsocks.json
+ 自启动
+ >echo "ssserver -c /root/shadowsocks.json -d start" >> /etc/rc.d/rc.local
+
+## 升级
+
+pip install -U shadowsocks
+
+# 使用Shadowsocks
+下载Shadowsocks客户端，这里需要说明的是：请勿在其它第三方网站下载Shadowsocks，防止被人加料，可以直接渠道[Shadowsocks的GitHub](https://github.com/shadowsocks)上面进行下载，提供了windows、Android、MAC等平台的安装包。
+
+## 配置Shadowsocks
+右键小飞机，编辑服务器
+
+![编辑服务器1](http://obh9jd33g.bkt.clouddn.com/writestory/1537964867254.png)
+
+输入相关信息
+
+![输入服务器信息](http://obh9jd33g.bkt.clouddn.com/writestory/1537964946241.png)
+
+输入完成点击确定，右键小飞机。
+
+![启动服务](http://obh9jd33g.bkt.clouddn.com/writestory/1537965093460.png)
+
+> PAC模式是指需要的情况下再使用Shadowsocks
+> 全局模式，每个网络请求都走代理
+
+启动完成可以输入google.com查看成果
+
+![google](http://obh9jd33g.bkt.clouddn.com/writestory/1537965177364.png)
+
+# 最后
+未完待续，持续更新。
