@@ -1,12 +1,20 @@
-# Shadowsocks
-How to build your own Shadowsocks
+
+# update
+> 2018年9月29日
+> 1. 更新截图
+> 2. 更新加密模式
+
 
 # 如何搭建自己的Shadowsocks
+
+
 主要有以下步骤：
 > 1. 购买境外VPS
 > 2. VPS中安装Shadowsocks
 > 3. VPS中启动Shadowsocks服务
 > 4. 使用客户端Shadowsocks
+
+
 # 什么是VPS
 [百度百科-VPS](https://baike.baidu.com/item/VPS)
 # 购买bandwagonhost的VPS
@@ -20,9 +28,7 @@ How to build your own Shadowsocks
 
 一年19.99美刀，将近130人民币，算上来是十分的划算了，加上优惠码的话还能打将近6%的折扣。
 
-[19.99购买地址](https://bandwagonhost.com/aff.php?aff=37047)
-[19.99购买地址](https://bandwagonhost.com/aff.php?aff=37047)
-[19.99购买地址](https://bandwagonhost.com/aff.php?aff=37047)
+[19.99购买地址](https://bwh1.net/index.php?aff=37047)
 
 加入购物车：
 
@@ -62,11 +68,11 @@ How to build your own Shadowsocks
 
 ![管理面板](http://obh9jd33g.bkt.clouddn.com/writestory/1534082931146.jpg)
 
-安装新的系统，这里我们选择Centos 7 x86_64即可。注意的是安装成功会返回一个端口号和登陆密码，需要将这两个东西保存好，以便后续的操作。
+安装新的系统（安装之前需要先停止VPS），这里我们选择Centos 7 x86_64即可。注意的是安装成功会返回一个端口号和登陆密码，需要将这两个东西保存好，以便后续的操作。
 
 ![选择系统](http://obh9jd33g.bkt.clouddn.com/writestory/1534083004026.jpg)
 
-![密码和端口号](http://obh9jd33g.bkt.clouddn.com/writestory/1534083161983.jpg)
+![密码和端口号](http://obh9jd33g.bkt.clouddn.com/writestory/1538216321625.png)
 
 # 安装Shadowsocks
 虽然搬瓦工提供了一键安装方式，但并不建议直接使用，而是建议自行安装，这样也能了解流程和配置多账号也比较方便。
@@ -79,7 +85,8 @@ How to build your own Shadowsocks
 > yum update
 
 这里我们使用Python版的Shadowsocks，方便日后的管理。先安装Python环境以及pip
-> yum install python-setuptools && easy_install pip
+> yum install python-setuptools
+>  easy_install pip
 
 PS:要升级的话不要做以上操作成功后，安装Shadowsocks
 > pip install shadowsocks
@@ -95,12 +102,13 @@ PS:要升级的话不要做以上操作成功后，安装Shadowsocks
 ```json
 {
 	"server": "你的IP地址",
+	"local_address": "127.0.0.1",
 	"port_password": {
 		"8381": "自定义一个该端口的密码",
 		"8382": "自定义一个该端口的密码"
 	},
 	"timeout": 300,
-	"method": "rc4-md5",
+	"method": "aes-256-cfb",
 	"fast_open": false,
 	"workers": 1
 }
@@ -110,7 +118,7 @@ PS:要升级的话不要做以上操作成功后，安装Shadowsocks
 |server   |当前服务器IP|
 |port_password   |要建立的端口号和密码（可以定义多个端口和密码供多设备使用）|
 |timeout   |超时时间（秒）|
-|method  |加密方法（推荐使用rc4-md5）|
+|method  |加密方法（推荐使用aes-256-cfb）|
 fast_open  |如果VPS的Linux内核在3.7以上，可以设置为true开启，以降低延迟|
 |workers    |works数量，默认为1|
 
@@ -125,12 +133,15 @@ fast_open  |如果VPS的Linux内核在3.7以上，可以设置为true开启，
 这里启动是直接在当前命令行中启动的，一旦关闭窗口就会关闭服务(Web端除外)，需要加上**nohup**
 
 > nohup ssserver -c /root/shadowsocks.json
+
+![启动成功](http://obh9jd33g.bkt.clouddn.com/writestory/1538217009159.png)
+
  自启动
- >echo "ssserver -c /root/shadowsocks.json -d start" >> /etc/rc.d/rc.local
+>echo "ssserver -c /root/shadowsocks.json -d start" >> /etc/rc.d/rc.local
 
-## 升级
 
-pip install -U shadowsocks
+
+如上图，启动成功，关闭连接即可。
 
 # 使用Shadowsocks
 下载Shadowsocks客户端，这里需要说明的是：请勿在其它第三方网站下载Shadowsocks，防止被人加料，可以直接渠道[Shadowsocks的GitHub](https://github.com/shadowsocks)上面进行下载，提供了windows、Android、MAC等平台的安装包。
@@ -142,7 +153,7 @@ pip install -U shadowsocks
 
 输入相关信息
 
-![输入服务器信息](http://obh9jd33g.bkt.clouddn.com/writestory/1537964946241.png)
+![输入服务器信息](http://obh9jd33g.bkt.clouddn.com/writestory/1538218802382.png)
 
 输入完成点击确定，右键小飞机。
 
@@ -154,6 +165,7 @@ pip install -U shadowsocks
 启动完成可以输入google.com查看成果
 
 ![google](http://obh9jd33g.bkt.clouddn.com/writestory/1537965177364.png)
+
 
 # 最后
 未完待续，持续更新。
